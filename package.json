@@ -1,0 +1,64 @@
+{
+  "name": "@dineug/routine-monorepo",
+  "packageManager": "yarn@3.2.2",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=16.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dineug/routine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dineug/routine/issues"
+  },
+  "homepage": "https://github.com/dineug/routine#readme",
+  "author": "SeungHwan-Lee <dineug2@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "yarn workspaces foreach run test",
+    "prepare": "husky install",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+    "format:prettier": "prettier \"**/*.{html,js,json,md,ts}\" --write",
+    "lint": "eslint \"**/*.{js,ts}\""
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^14.1.0",
+    "@rollup/pluginutils": "^4.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "rollup": "^2.79.1",
+    "rollup-plugin-filesize": "^9.1.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "rollup-plugin-visualizer": "^5.8.2",
+    "tslib": "^2.4.0",
+    "ttypescript": "^1.5.13",
+    "turbo": "^1.5.5",
+    "typescript": "4.8.4",
+    "typescript-transform-paths": "^3.3.1",
+    "vite": "^3.1.7",
+    "vite-tsconfig-paths": "^3.5.1"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "folders": [
+    {
+      "name": "routine",
+      "path": "packages/routine"
+    },
+    {
+      "name": "monorepo",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": true
+    },
+    "editor.tabSize": 2,
+    "editor.tabCompletion": "on",
+    "editor.suggestSelection": "first",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always"
+  },
+  "extensions": {
+    "recommendations": [
+      "arcanis.vscode-zipfs",
+      "editorconfig.editorconfig",
+      "davidanson.vscode-markdownlint",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "styled-components.vscode-styled-components"
+    ]
+  }
+}

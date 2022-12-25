@@ -1,0 +1,26 @@
+{
+  "name": "@dineug/routine",
+  "private": true,
+  "version": "0.1.0",
+  "main": "dist/routine.js",
+  "browser": "dist/routine.min.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "dist/*.js",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dineug/routine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dineug/routine/issues"
+  },
+  "homepage": "https://github.com/dineug/routine#readme",
+  "author": "SeungHwan-Lee <dineug2@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "rollup -c"
+  }
+}

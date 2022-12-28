@@ -1,11 +1,9 @@
-import { EffectType } from '@/constants';
-import type { AnyCallback, ForkEffect } from '@/effects';
+import type { AnyCallback } from '@/effects';
+import { routine } from '@/routine';
 
 export const fork = <F extends AnyCallback>(
   callback: F,
   ...args: Parameters<F>
-): ForkEffect<F> => ({
-  type: EffectType.fork,
-  callback,
-  args,
-});
+) => {
+  routine(callback, ...args);
+};

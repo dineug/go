@@ -1,18 +1,24 @@
-import { EffectType } from '@/constants';
-import type { AnyCallback, Effect } from '@/effects';
-import { isFunction, isIterator, isObject, isPromise } from '@/is-type';
+import type { AnyCallback } from '@/effects';
+import { isArray, isFunction, isIterator, isPromise } from '@/is-type';
 
 export type CompositionGenerator<T> =
   | Generator<T | Generator<T>>
   | AsyncGenerator<T | AsyncGenerator<T>>;
 
-export type CoroutineCreator = () => CompositionGenerator<
-  Effect | Promise<any> | Function
+type CompositionPromise<T> = Promise<T> | PromiseLike<T>;
+
+export type CoroutineCreator = (
+  ...args: any[]
+) => CompositionGenerator<
+  CompositionPromise<any> | Function | Array<any> | void
 >;
 
 export type CO = CoroutineCreator;
 
-export async function routine(callback: AnyCallback, ...args: any[]) {
+export async function routine<F extends AnyCallback>(
+  callback: F,
+  ...args: Parameters<F>
+) {
   const co = callback(...args);
   if (!isIterator(co)) return co;
 
@@ -22,29 +28,14 @@ export async function routine(callback: AnyCallback, ...args: any[]) {
   while (!result.done) {
     if (isPromise(result.value)) {
       value = await result.value;
-    } else if (isFunction(result.value)) {
-      value = await routine(result.value);
     } else if (isIterator(result.value)) {
       value = await routine(() => result.value);
-    } else if (isObject(result.value)) {
-      const effect: Effect = result.value;
-
-      switch (effect.type) {
-        case EffectType.take:
-          value = await new Promise<any>(resolve =>
-            effect.channel.take(resolve)
-          );
-          break;
-        case EffectType.put:
-          effect.channel.put(effect.value);
-          break;
-        case EffectType.call:
-          value = await routine(effect.callback, ...effect.args);
-          break;
-        case EffectType.fork:
-          routine(effect.callback, ...effect.args);
-          break;
-      }
+    } else if (isFunction(result.value)) {
+      value = await routine(result.value);
+    } else if (isArray(result.value)) {
+      value = await Promise.all(
+        result.value.map(value => routine(() => value))
+      );
     }
 
     result = await co.next(value);

@@ -15,7 +15,7 @@ export type CoroutineCreator = (
 
 export type CO = CoroutineCreator;
 
-export async function routine<F extends AnyCallback>(
+export async function go<F extends AnyCallback>(
   callback: F,
   ...args: Parameters<F>
 ) {
@@ -29,13 +29,11 @@ export async function routine<F extends AnyCallback>(
     if (isPromise(result.value)) {
       value = await result.value;
     } else if (isIterator(result.value)) {
-      value = await routine(() => result.value);
+      value = await go(() => result.value);
     } else if (isFunction(result.value)) {
-      value = await routine(result.value);
+      value = await go(result.value);
     } else if (isArray(result.value)) {
-      value = await Promise.all(
-        result.value.map(value => routine(() => value))
-      );
+      value = await Promise.all(result.value.map(value => go(() => value)));
     }
 
     result = await co.next(value);

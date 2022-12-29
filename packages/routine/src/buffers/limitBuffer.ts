@@ -1,4 +1,4 @@
-import type { ChannelBuffer } from '@/buffers';
+import type { ChannelBuffer } from '@/buffers/type';
 
 export type LimitBufferConfig = Partial<{
   limit: number;
@@ -34,6 +34,12 @@ export class LimitBuffer<T = any> implements ChannelBuffer<T> {
 
   take(): T | undefined {
     return this.#queue.shift();
+  }
+
+  flush(): Array<T> {
+    const queue = this.#queue;
+    this.#queue = [];
+    return queue;
   }
 
   #drop() {

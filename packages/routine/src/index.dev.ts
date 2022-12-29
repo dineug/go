@@ -1,7 +1,19 @@
-import { all, call, Channel, CO, fork, put, routine, take } from '@/index';
+import {
+  all,
+  call,
+  channel,
+  CO,
+  delay,
+  flush,
+  fork,
+  go,
+  put,
+  race,
+  take,
+} from '@/index';
 
-const inputChannel = new Channel();
-const outputChannel = new Channel();
+const inputChannel = channel();
+const outputChannel = channel();
 
 const foo: CO = function* () {
   console.log('start');
@@ -27,13 +39,26 @@ const foo: CO = function* () {
     take(inputChannel),
   ]);
   console.log('all:values', values);
+
+  yield delay(2000);
+  console.log('delay', 2000);
+
+  const value3 = yield race({
+    a: delay(100),
+    b: delay(200),
+    c: take(inputChannel),
+  });
+  console.log('race', value3);
+
+  const value4 = yield flush(inputChannel);
+  console.log('flush', value4);
 };
 
 for (let i = 0; i < 20; i++) {
   inputChannel.put(i);
 }
 
-routine(foo);
+go(foo);
 
 outputChannel.take(value => {
   console.log('outputChannel', value);

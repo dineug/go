@@ -1,18 +1,17 @@
-import type { ChannelBuffer } from '@/buffers';
-import { LimitBuffer } from '@/buffers/limitBuffer';
+import { type ChannelBuffer, buffers } from '@/buffers';
 
-export type Observer<T = any> = (value: T) => void;
+export type TakeCallback<T = any> = (value: T) => void;
 
 export class Channel<T = any> {
   #buffer: ChannelBuffer<T>;
-  #observers: ChannelBuffer<Observer<T>> = new LimitBuffer();
+  #callbackBuffer: ChannelBuffer<TakeCallback<T>> = buffers.limitBuffer();
   #closed = false;
 
   get closed() {
     return this.#closed;
   }
 
-  constructor(buffer: ChannelBuffer<T> = new LimitBuffer()) {
+  constructor(buffer: ChannelBuffer<T> = buffers.limitBuffer()) {
     this.#buffer = buffer;
   }
 
@@ -23,11 +22,17 @@ export class Channel<T = any> {
     this.#notify();
   }
 
-  take(observer: (value: T) => void) {
+  take(callback: TakeCallback<T>) {
     if (this.#closed) return;
 
-    this.#observers.put(observer);
+    this.#callbackBuffer.put(callback);
     this.#notify();
+  }
+
+  flush(callback: (values: Array<T>) => void) {
+    if (this.#closed) return;
+
+    callback(this.#buffer.flush());
   }
 
   close() {
@@ -35,12 +40,15 @@ export class Channel<T = any> {
   }
 
   #notify() {
-    if (this.#observers.isEmpty() || this.#buffer.isEmpty()) {
+    if (this.#callbackBuffer.isEmpty() || this.#buffer.isEmpty()) {
       return;
     }
 
-    const observer = this.#observers.take();
+    const callback = this.#callbackBuffer.take();
     const value = this.#buffer.take();
-    observer?.(value!);
+    callback?.(value!);
   }
 }
+
+export const channel = <T = any>(buffer?: ChannelBuffer<T>) =>
+  new Channel(buffer);

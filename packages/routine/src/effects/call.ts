@@ -1,3 +1,3 @@
-import { routine } from '@/routine';
+import { go } from '@/routine';
 
-export const call = routine;
+export const call = go;

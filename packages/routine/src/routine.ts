@@ -1,11 +1,24 @@
-import type { AnyCallback } from '@/effects';
-import { isArray, isFunction, isIterator, isPromiseLike } from '@/is-type';
+import {
+  isArray,
+  isFunction,
+  isIterator,
+  isOperator,
+  isPromiseLike,
+} from '@/is-type';
+import { type AnyCallback, CANCEL, cancel, isCancel } from '@/operators';
 
 export type CompositionGenerator<T> =
   | Generator<T | CompositionGenerator<T>>
   | AsyncGenerator<T | CompositionGenerator<T>>;
 
-type CompositionPromise<T> = Promise<T> | PromiseLike<T>;
+export type PromiseWithCancel<T = any> = Promise<T> & {
+  cancel(): PromiseWithCancel<T>;
+};
+
+export type CompositionPromise<T = any> =
+  | Promise<T>
+  | PromiseLike<T>
+  | PromiseWithCancel<T>;
 
 export type CoroutineCreator = (
   ...args: any[]
@@ -15,30 +28,71 @@ export type CoroutineCreator = (
 
 export type CO = CoroutineCreator;
 
-export async function go<F extends AnyCallback>(
+export function go<F extends AnyCallback>(
   callback: F,
   ...args: Parameters<F>
-): Promise<any> {
-  const co = callback(...args);
-  if (!isIterator(co)) return co;
+): PromiseWithCancel<any> {
+  let canceled = false;
+  let cancelAndReject: AnyCallback | undefined;
 
-  let result = await co.next();
-  let value;
+  const promise = new Promise(async (resolve, reject) => {
+    let process: Array<CompositionPromise<any>> | undefined;
+    cancelAndReject = () => {
+      reject(CANCEL);
+      process?.forEach(cancel);
+      process = undefined;
+    };
 
-  while (!result.done) {
-    if (isPromiseLike(result.value)) {
-      value = await result.value;
-    } else if (isIterator(result.value)) {
-      value = await go(() => result.value);
-    } else if (isFunction(result.value)) {
-      value = await go(result.value);
-    } else if (isArray(result.value)) {
-      value = await Promise.all(result.value.map(value => go(() => value)));
+    try {
+      const co = callback(...args);
+      if (isPromiseLike(co)) {
+        process = [co];
+        return resolve(await co);
+      } else if (!isIterator(co)) {
+        return resolve(co);
+      }
+
+      let result = await co.next();
+      let value;
+
+      while (!canceled && !result.done) {
+        if (isOperator(result.value)) {
+          const next = toNext(result.value);
+          process = isArray(next) ? next : [next];
+          value = await (isArray(next) ? Promise.all(next) : next);
+        }
+
+        result = await co.next(value);
+        value = undefined;
+        process = undefined;
+      }
+
+      resolve(result.value);
+    } catch (error) {
+      if (isCancel(error)) {
+        canceled = true;
+      }
+      reject(error);
     }
+  }) as PromiseWithCancel;
 
-    result = await co.next(value);
-    value = undefined;
-  }
+  promise.cancel = () => {
+    canceled = true;
+    cancelAndReject?.();
+    return promise;
+  };
 
-  return result.value;
+  return promise;
+}
+
+function toNext(value: any) {
+  return isPromiseLike(value)
+    ? value
+    : isIterator(value)
+    ? go(() => value)
+    : isFunction(value)
+    ? go(value)
+    : isArray(value)
+    ? value.map(value => go(() => value))
+    : Promise.resolve();
 }

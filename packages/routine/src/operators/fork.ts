@@ -1,4 +1,4 @@
-import type { AnyCallback } from '@/effects';
+import type { AnyCallback } from '@/operators';
 import { go } from '@/routine';
 
 export const fork = <F extends AnyCallback>(

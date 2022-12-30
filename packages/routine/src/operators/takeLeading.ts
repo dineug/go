@@ -1,5 +1,5 @@
 import { Channel } from '@/channel';
-import { take } from '@/effects/take';
+import { take } from '@/operators/take';
 import { go } from '@/routine';
 
 export const takeLeading = <

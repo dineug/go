@@ -1,3 +1,5 @@
+import type { PromiseWithCancel } from '@/routine';
+
 type typeofKey =
   | 'bigint'
   | 'boolean'
@@ -44,7 +46,22 @@ export const isPromise = (value: any): value is Promise<any> =>
   isFunction(value.catch) &&
   isFunction(value.finally);
 
+export const isPromiseWithCancel = (
+  value: any
+): value is PromiseWithCancel<any> =>
+  isObject(value) &&
+  isFunction(value.then) &&
+  isFunction(value.catch) &&
+  isFunction(value.finally) &&
+  isFunction(value.cancel);
+
 export const isIterator = (
   value: any
 ): value is Iterator<any> | AsyncIterator<any> =>
   isObject(value) && isFunction(value.next);
+
+export const isOperator = (value: any) =>
+  isPromiseLike(value) ||
+  isIterator(value) ||
+  isFunction(value) ||
+  isArray(value);

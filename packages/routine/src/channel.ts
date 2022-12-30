@@ -1,6 +1,6 @@
 import { type ChannelBuffer, buffers } from '@/buffers';
 
-export type TakeCallback<T = any> = (value: T) => void;
+export type TakeCallback<T = any> = (value: T) => any;
 
 export class Channel<T = any> {
   #buffer: ChannelBuffer<T>;
@@ -46,7 +46,7 @@ export class Channel<T = any> {
 
     const callback = this.#callbackBuffer.take();
     const value = this.#buffer.take();
-    callback?.(value!);
+    callback?.(value as T);
   }
 }
 

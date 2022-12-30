@@ -35,8 +35,14 @@ export const isPrimitive = (value: any) =>
   isUndefined(value) ||
   isNull(value);
 
-export const isPromise = (value: any): value is PromiseLike<any> =>
+export const isPromiseLike = (value: any): value is PromiseLike<any> =>
   isObject(value) && isFunction(value.then);
+
+export const isPromise = (value: any): value is Promise<any> =>
+  isObject(value) &&
+  isFunction(value.then) &&
+  isFunction(value.catch) &&
+  isFunction(value.finally);
 
 export const isIterator = (
   value: any

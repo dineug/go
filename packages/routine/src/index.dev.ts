@@ -12,8 +12,8 @@ import {
   take,
 } from '@/index';
 
-const inputChannel = channel();
-const outputChannel = channel();
+const inputChannel = channel<number>();
+const outputChannel = channel<number>();
 
 const foo: CO = function* () {
   console.log('start');

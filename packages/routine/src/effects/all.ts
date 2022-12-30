@@ -1,4 +1,4 @@
 import { go } from '@/routine';
 
-export const all = (values: any[]) =>
-  Promise.all(values.map(value => go(() => value)));
+export const all = <T extends readonly unknown[] | []>(values: T) =>
+  Promise.all<T>(values.map(value => go(() => value)));

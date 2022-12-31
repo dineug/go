@@ -6,7 +6,7 @@ export type LimitBufferConfig = Partial<{
   trailing: boolean;
 }>;
 
-const defaultConfig: LimitBufferConfig = {
+const defaultConfig: Required<LimitBufferConfig> = {
   limit: -1,
   leading: false,
   trailing: false,
@@ -17,10 +17,9 @@ export class LimitBuffer<T = any> implements ChannelBuffer<T> {
   #config: Required<LimitBufferConfig>;
 
   constructor(config?: LimitBufferConfig) {
-    this.#config = Object.assign(
-      { ...config },
-      defaultConfig
-    ) as Required<LimitBufferConfig>;
+    this.#config = Object.assign({}, defaultConfig, {
+      ...config,
+    });
   }
 
   isEmpty(): boolean {

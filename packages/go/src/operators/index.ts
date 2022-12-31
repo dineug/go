@@ -1,6 +1,7 @@
 export * from '@/operators/all';
 export * from '@/operators/call';
 export * from '@/operators/cancel';
+export * from '@/operators/debounce';
 export * from '@/operators/delay';
 export * from '@/operators/flush';
 export * from '@/operators/fork';
@@ -11,4 +12,5 @@ export * from '@/operators/take';
 export * from '@/operators/takeEvery';
 export * from '@/operators/takeLatest';
 export * from '@/operators/takeLeading';
+export * from '@/operators/throttle';
 export * from '@/operators/type';

@@ -33,14 +33,14 @@ export function go<F extends AnyCallback>(
   ...args: Parameters<F>
 ): PromiseWithCancel<any> {
   let canceled = false;
-  let cancelAndReject: AnyCallback | undefined;
+  let cancelAndReject: AnyCallback | null = null;
 
   const promise = new Promise(async (resolve, reject) => {
-    let process: Array<CompositionPromise<any>> | undefined;
+    let process: Array<CompositionPromise<any>> | null = null;
     cancelAndReject = () => {
       reject(CANCEL);
       process?.forEach(cancel);
-      process = undefined;
+      process = null;
     };
 
     try {
@@ -64,7 +64,7 @@ export function go<F extends AnyCallback>(
 
         result = await co.next(value);
         value = undefined;
-        process = undefined;
+        process = null;
       }
 
       resolve(result.value);

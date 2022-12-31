@@ -4,6 +4,7 @@ export * from '@/operators/cancel';
 export * from '@/operators/delay';
 export * from '@/operators/flush';
 export * from '@/operators/fork';
+export * from '@/operators/kill';
 export * from '@/operators/put';
 export * from '@/operators/race';
 export * from '@/operators/take';

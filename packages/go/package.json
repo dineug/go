@@ -1,9 +1,9 @@
 {
-  "name": "@dineug/routine",
+  "name": "@dineug/go",
   "private": true,
   "version": "0.1.0",
-  "main": "dist/routine.js",
-  "browser": "dist/routine.min.js",
+  "main": "dist/go.js",
+  "browser": "dist/go.min.js",
   "typings": "types/index.d.ts",
   "files": [
     "dist/*.js",
@@ -11,12 +11,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dineug/routine.git"
+    "url": "https://github.com/dineug/go.git"
   },
   "bugs": {
-    "url": "https://github.com/dineug/routine/issues"
+    "url": "https://github.com/dineug/go/issues"
   },
-  "homepage": "https://github.com/dineug/routine#readme",
+  "homepage": "https://github.com/dineug/go#readme",
   "author": "SeungHwan-Lee <dineug2@gmail.com>",
   "license": "MIT",
   "scripts": {

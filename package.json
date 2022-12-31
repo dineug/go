@@ -1,5 +1,5 @@
 {
-  "name": "@dineug/routine-monorepo",
+  "name": "@dineug/go-monorepo",
   "packageManager": "yarn@3.2.2",
   "private": true,
   "workspaces": [
@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dineug/routine.git"
+    "url": "https://github.com/dineug/go.git"
   },
   "bugs": {
-    "url": "https://github.com/dineug/routine/issues"
+    "url": "https://github.com/dineug/go/issues"
   },
-  "homepage": "https://github.com/dineug/routine#readme",
+  "homepage": "https://github.com/dineug/go#readme",
   "author": "SeungHwan-Lee <dineug2@gmail.com>",
   "license": "MIT",
   "scripts": {

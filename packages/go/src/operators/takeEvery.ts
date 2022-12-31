@@ -1,6 +1,6 @@
 import { type TakeCallback, Channel } from '@/channel';
+import { go } from '@/go';
 import { take } from '@/operators/take';
-import { go } from '@/routine';
 
 export const takeEvery = <T = any, F extends TakeCallback<T> = TakeCallback<T>>(
   channel: Channel<T>,

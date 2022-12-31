@@ -1,4 +1,4 @@
-import type { PromiseWithCancel } from '@/routine';
+import type { PromiseWithCancel } from '@/go';
 
 type typeofKey =
   | 'bigint'

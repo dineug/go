@@ -1,9 +1,8 @@
 import { Channel } from '@/channel';
-import { cancel } from '@/operators/cancel';
+import { go } from '@/go';
 import { take } from '@/operators/take';
-import { type PromiseWithCancel, go } from '@/routine';
 
-export const takeLatest = <
+export const takeLeading = <
   T = any,
   F extends (value: T) => any = (value: T) => any
 >(
@@ -11,13 +10,18 @@ export const takeLatest = <
   callback: F
 ) => {
   go(function* () {
-    let lastTask: PromiseWithCancel | undefined;
+    let executable = true;
 
     while (true) {
       const value: any = yield take(channel);
-      cancel(lastTask);
-      // @ts-ignore
-      lastTask = go(callback, value);
+
+      if (executable) {
+        executable = false;
+        // @ts-ignore
+        go(callback, value).finally(() => {
+          executable = true;
+        });
+      }
     }
   });
 };

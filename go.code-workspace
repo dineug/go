@@ -1,8 +1,8 @@
 {
   "folders": [
     {
-      "name": "routine",
-      "path": "packages/routine"
+      "name": "go",
+      "path": "packages/go"
     },
     {
       "name": "monorepo",

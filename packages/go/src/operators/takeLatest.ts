@@ -15,7 +15,7 @@ export const takeLatest = <
 
     while (true) {
       const value: any = yield take(channel);
-      cancel(lastTask);
+      lastTask && cancel(lastTask);
       // @ts-ignore
       lastTask = go(callback, value);
     }

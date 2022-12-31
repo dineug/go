@@ -48,9 +48,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dineug/routine-monorepo@workspace:.":
+"@dineug/go-monorepo@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@dineug/routine-monorepo@workspace:."
+  resolution: "@dineug/go-monorepo@workspace:."
   dependencies:
     "@rollup/plugin-commonjs": ^23.0.0
     "@rollup/plugin-json": ^4.1.0
@@ -81,9 +81,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dineug/routine@workspace:packages/routine":
+"@dineug/go@workspace:packages/go":
   version: 0.0.0-use.local
-  resolution: "@dineug/routine@workspace:packages/routine"
+  resolution: "@dineug/go@workspace:packages/go"
   languageName: unknown
   linkType: soft
 

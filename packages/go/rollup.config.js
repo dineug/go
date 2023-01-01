@@ -20,13 +20,20 @@ export default {
   context: 'globalThis',
   output: [
     {
-      file: pkg.main,
+      file: pkg.module,
       format: 'es',
       banner,
     },
     {
+      name: pkg.name,
+      file: pkg.main,
+      format: 'umd',
+      banner,
+    },
+    {
+      name: pkg.name,
       file: pkg.browser,
-      format: 'es',
+      format: 'umd',
       banner,
       plugins: [terser()],
     },

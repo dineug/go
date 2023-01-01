@@ -1,13 +1,18 @@
 {
   "name": "@dineug/go",
-  "private": true,
   "version": "0.1.0",
   "main": "dist/go.js",
+  "module": "dist/go.esm.js",
   "browser": "dist/go.min.js",
   "typings": "types/index.d.ts",
   "files": [
     "dist/*.js",
     "types"
+  ],
+  "keywords": [
+    "coroutine",
+    "co",
+    "go"
   ],
   "repository": {
     "type": "git",

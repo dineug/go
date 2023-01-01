@@ -60,7 +60,14 @@ export const isIterator = (
 ): value is Iterator<any> | AsyncIterator<any> =>
   isObject(value) && isFunction(value.next);
 
-export const isOperator = (value: any) =>
+export const isOperator = (
+  value: any
+): value is
+  | PromiseLike<any>
+  | Iterator<any>
+  | AsyncIterator<any>
+  | Function
+  | Array<any> =>
   isPromiseLike(value) ||
   isIterator(value) ||
   isFunction(value) ||

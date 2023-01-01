@@ -1,8 +1,8 @@
 # go - Promise Extension Library
 
-![npm](https://img.shields.io/npm/v/@dineug/go)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/@dineug/go)
-![NPM](https://img.shields.io/npm/l/@dineug/go)
+[![npm version](https://img.shields.io/npm/v/@dineug/go.svg?style=flat-square&color=blue)](https://www.npmjs.com/package/@dineug/go)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@dineug/go?style=flat-square&color=blue)](https://www.npmjs.com/package/@dineug/go)
+[![GitHub](https://img.shields.io/github/license/dineug/go?style=flat-square&color=blue)](https://github.com/dineug/go/blob/main/packages/go/LICENSE)
 
 like [co](https://github.com/tj/co), or [redux-saga](https://redux-saga.js.org)
 

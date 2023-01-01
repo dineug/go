@@ -8,6 +8,7 @@ like [co](https://github.com/tj/co), or [redux-saga](https://redux-saga.js.org)
 
 - [Getting Started](#getting-started)
 - [API](#api)
+  - [go](#go)
   - [all](#all)
   - [call](#call)
   - [cancel](#cancel)

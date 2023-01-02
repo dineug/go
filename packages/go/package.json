@@ -12,7 +12,10 @@
   "keywords": [
     "coroutine",
     "co",
-    "go"
+    "go",
+    "iterator",
+    "generator",
+    "promise"
   ],
   "repository": {
     "type": "git",

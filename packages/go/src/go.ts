@@ -1,11 +1,18 @@
 import {
   isArray,
   isFunction,
+  isGenerator,
   isIterator,
   isOperator,
   isPromiseLike,
 } from '@/is-type';
-import { type AnyCallback, CANCEL, cancel, isCancel } from '@/operators';
+import {
+  type AnyCallback,
+  CANCEL,
+  cancel,
+  isCancel,
+  isKill,
+} from '@/operators';
 
 export type CompositionGenerator<T> =
   | Generator<T | CompositionGenerator<T>>
@@ -67,13 +74,24 @@ export function go<F extends AnyCallback>(
       let value;
 
       while (!canceled && !result.done) {
-        if (isOperator(result.value)) {
-          const next = toNext(result.value);
-          process = isArray(next) ? next : [next];
-          value = await (isArray(next) ? Promise.all(next) : next);
+        try {
+          if (isOperator(result.value)) {
+            const next = toNext(result.value);
+            process = isArray(next) ? next : [next];
+            value = await (isArray(next) ? Promise.all(next) : next);
+          }
+
+          result = await co.next(value);
+        } catch (error) {
+          if (isKill(error)) {
+            throw error;
+          }
+
+          if (isGenerator(co)) {
+            result = await co.throw(error);
+          }
         }
 
-        result = await co.next(value);
         value = undefined;
         process = null;
       }

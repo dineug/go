@@ -20,9 +20,9 @@ like [co](https://github.com/tj/co), or [redux-saga](https://redux-saga.js.org)
   - [put](#put)
   - [race](#race)
   - [take](#take)
-  - [takeEvery](#takeEvery)
-  - [takeLatest](#takeLatest)
-  - [takeLeading](#takeLeading)
+  - [takeEvery](#takeevery)
+  - [takeLatest](#takelatest)
+  - [takeLeading](#takeleading)
   - [throttle](#throttle)
 
 ## Getting Started
@@ -203,6 +203,16 @@ const task = go(function* () {
 });
 
 cancel(task);
+
+go(function* () {
+  try {
+    yield cancel();
+  } catch (error) {
+    if (isCancel(error)) {
+      // ...
+    }
+  }
+});
 ```
 
 #### low-level operator
@@ -210,6 +220,13 @@ cancel(task);
 ```js
 const cancel = promise => {
   isPromiseWithCancel(promise) && promise.cancel();
+
+  return go(
+    () =>
+      new Promise<void>((resolve, reject) =>
+        promise ? resolve() : reject(CANCEL)
+      )
+  );
 };
 ```
 
@@ -302,6 +319,10 @@ go(function* () {
       yield kill();
     });
   });
+}).catch(error => {
+  if (isKill(error)) {
+    // ...
+  }
 });
 ```
 

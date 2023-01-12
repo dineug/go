@@ -60,6 +60,14 @@ export const isIterator = (
 ): value is Iterator<any> | AsyncIterator<any> =>
   isObject(value) && isFunction(value.next);
 
+export const isGenerator = (
+  value: any
+): value is Generator<any> | AsyncGenerator<any> =>
+  isObject(value) &&
+  isFunction(value.next) &&
+  isFunction(value.throw) &&
+  isFunction(value.return);
+
 export const isOperator = (
   value: any
 ): value is

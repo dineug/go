@@ -285,7 +285,8 @@ go(function* () {
 #### low-level operator
 
 ```js
-const flush = channel => new Promise(resolve => channel.flush(resolve));
+const flush = channel =>
+  new Promise((resolve, reject) => channel.flush(resolve, reject));
 ```
 
 ### fork
@@ -396,7 +397,22 @@ go(function* () {
 #### low-level operator
 
 ```js
-const take = channel => new Promise(resolve => channel.take(resolve));
+const take = channel =>
+  go(function* () {
+    let drop = () => false;
+
+    const promise = new Promise((resolve, reject) => {
+      drop = channel.take(resolve, reject);
+    });
+
+    promise.cancel = () => {
+      drop();
+      return promise;
+    };
+
+    const value = yield promise;
+    return value;
+  });
 ```
 
 ### takeEvery

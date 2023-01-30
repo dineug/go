@@ -1,10 +1,16 @@
 import { type ChannelBuffer, buffers } from '@/buffers';
 
 export type TakeCallback<T = any> = (value: T) => any;
+export type CloseCallback = (error: typeof CLOSED) => void;
+type CallbackTuple<T> = [TakeCallback<T>, CloseCallback | undefined];
+
+export const CLOSED = Symbol.for('https://github.com/dineug/go.git#closed');
+export const isClosed = (value: any): value is typeof CLOSED =>
+  value === CLOSED;
 
 export class Channel<T = any> {
   #buffer: ChannelBuffer<T>;
-  #callbackBuffer: ChannelBuffer<TakeCallback<T>> = buffers.limitBuffer();
+  #callbackBuffer: ChannelBuffer<CallbackTuple<T>> = buffers.limitBuffer();
   #closed = false;
 
   get closed() {
@@ -22,21 +28,36 @@ export class Channel<T = any> {
     this.#notify();
   }
 
-  take(callback: TakeCallback<T>) {
-    if (this.#closed) return;
+  take(callback: TakeCallback<T>, close?: (error: typeof CLOSED) => void) {
+    if (this.#closed) {
+      close?.(CLOSED);
+      return () => false;
+    }
 
-    this.#callbackBuffer.put(callback);
+    this.#callbackBuffer.put([callback, close]);
     this.#notify();
+
+    return () => this.#callbackBuffer.drop(([cb]) => cb === callback);
   }
 
-  flush(callback: (values: Array<T>) => void) {
-    if (this.#closed) return;
+  flush(
+    callback: (values: Array<T>) => void,
+    close?: (error: typeof CLOSED) => void
+  ) {
+    if (this.#closed) {
+      close?.(CLOSED);
+      return;
+    }
 
     callback(this.#buffer.flush());
   }
 
   close() {
     this.#closed = true;
+
+    this.#callbackBuffer
+      .flush()
+      .forEach(([__callback, close]) => close?.(CLOSED));
   }
 
   #notify() {
@@ -44,9 +65,9 @@ export class Channel<T = any> {
       return;
     }
 
-    const callback = this.#callbackBuffer.take();
-    const value = this.#buffer.take();
-    callback?.(value as T);
+    const [callback] = this.#callbackBuffer.take() as CallbackTuple<T>;
+    const value = this.#buffer.take() as T;
+    callback?.(value);
   }
 }
 

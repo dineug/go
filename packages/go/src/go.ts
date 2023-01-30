@@ -3,7 +3,6 @@ import {
   isFunction,
   isGenerator,
   isIterator,
-  isOperator,
   isPromiseLike,
 } from '@/is-type';
 import {
@@ -75,12 +74,9 @@ export function go<F extends AnyCallback>(
 
       while (!canceled && !result.done) {
         try {
-          if (isOperator(result.value)) {
-            const next = toNext(result.value);
-            process = isArray(next) ? next : [next];
-            value = await (isArray(next) ? Promise.all(next) : next);
-          }
-
+          const next = toNext(result.value);
+          process = isArray(next) ? next : [next];
+          value = await (isArray(next) ? Promise.all(next) : next);
           result = await co.next(value);
         } catch (error) {
           if (isKill(error)) {

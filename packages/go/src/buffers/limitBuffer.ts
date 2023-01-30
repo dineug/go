@@ -41,6 +41,16 @@ export class LimitBuffer<T = any> implements ChannelBuffer<T> {
     return queue;
   }
 
+  drop(predicate: (value: T) => boolean) {
+    const index = this.#queue.findIndex(predicate);
+    if (index === -1) return false;
+
+    const queue = this.#queue.slice();
+    queue.splice(index, 1);
+    this.#queue = queue;
+    return true;
+  }
+
   #drop() {
     if (this.#config.limit === -1) return;
 

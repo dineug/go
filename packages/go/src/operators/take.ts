@@ -1,4 +1,19 @@
 import { Channel } from '@/channel';
+import { type PromiseWithCancel, go } from '@/go';
 
 export const take = <T = any>(channel: Channel<T>) =>
-  new Promise<T>(resolve => channel.take(resolve));
+  go(function* () {
+    let drop = () => false;
+
+    const promise = new Promise<T>((resolve, reject) => {
+      drop = channel.take(resolve, reject);
+    }) as PromiseWithCancel<T>;
+
+    promise.cancel = () => {
+      drop();
+      return promise;
+    };
+
+    const value: T = yield promise;
+    return value;
+  });

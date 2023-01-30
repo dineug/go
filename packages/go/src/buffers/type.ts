@@ -3,4 +3,5 @@ export type ChannelBuffer<T = any> = {
   put(value: T): void;
   take(): T | undefined;
   flush(): Array<T>;
+  drop(predicate: (value: T) => boolean): boolean;
 };

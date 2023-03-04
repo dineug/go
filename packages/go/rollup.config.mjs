@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import filesize from 'rollup-plugin-filesize';
@@ -6,7 +8,7 @@ import typescript from 'rollup-plugin-typescript2';
 import { visualizer } from 'rollup-plugin-visualizer';
 import ttypescript from 'ttypescript';
 
-import pkg from './package.json' assert { type: 'json' };
+const pkg = JSON.parse(readFileSync('package.json', { encoding: 'utf8' }));
 
 const banner = `/*!
  * ${pkg.name}
@@ -44,6 +46,8 @@ export default {
     typescript({
       typescript: ttypescript,
       useTsconfigDeclarationDir: true,
+      importHelpers: false,
+      check: false,
     }),
     visualizer({
       filename: './dist/stats.html',

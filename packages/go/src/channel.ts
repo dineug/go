@@ -1,4 +1,4 @@
-import { type ChannelBuffer, buffers } from '@/buffers';
+import { buffers, type ChannelBuffer } from '@/buffers';
 
 export type TakeCallback<T = any> = (value: T) => any;
 export type CloseCallback = (error: typeof CLOSED) => void;

@@ -10,12 +10,10 @@ like [co](https://github.com/tj/co), or [redux-saga](https://redux-saga.js.org)
 - [API](#api)
   - [go](#go)
   - [all](#all)
-  - [call](#call)
   - [cancel](#cancel)
   - [debounce](#debounce)
   - [delay](#delay)
   - [flush](#flush)
-  - [fork](#fork)
   - [kill](#kill)
   - [put](#put)
   - [race](#race)
@@ -36,12 +34,10 @@ npm install @dineug/go
 ```ts
 import {
   all,
-  call,
   channel,
   CO,
   delay,
   flush,
-  fork,
   go,
   put,
   race,
@@ -52,15 +48,15 @@ const ch = channel();
 
 const foo: CO = function* () {
   const value = yield take(ch);
-  const value2 = yield call(v => v, value);
+  const value2 = yield go(v => v, value);
 
-  yield fork(function* () {
+  go(function* () {
     const value = yield take(ch);
   });
 
   const values = yield all([
-    call(() => 1),
-    fork(() => 2),
+    go(() => 1),
+    go(() => 2),
     Promise.resolve(3),
     Promise.resolve(4),
     5,
@@ -154,8 +150,7 @@ Same as Promise.all
 
 ```js
 all([
-  call(() => 1),
-  fork(() => 2),
+  go(() => 1),
   Promise.resolve(3),
   Promise.resolve(4),
   5,
@@ -173,22 +168,6 @@ const all = values =>
     const result = yield values;
     return result;
   });
-```
-
-### call
-
-Same as go
-
-#### Example
-
-```js
-call(function* () {});
-```
-
-#### low-level operator
-
-```js
-const call = go;
 ```
 
 ### cancel
@@ -241,7 +220,7 @@ debounce(ch, function* () {}, 1000);
 #### low-level operator
 
 ```js
-const debounce = (channel, callback, ms) => {
+const debounce = (channel, callback, ms) =>
   go(function* () {
     let timerId = -1;
 
@@ -252,7 +231,6 @@ const debounce = (channel, callback, ms) => {
       timerId = window.setTimeout(go, ms, callback, value);
     }
   });
-};
 ```
 
 ### delay
@@ -289,24 +267,6 @@ const flush = channel =>
   new Promise((resolve, reject) => channel.flush(resolve, reject));
 ```
 
-### fork
-
-#### Example
-
-```js
-go(function* () {
-  yield fork(function* () {});
-});
-```
-
-#### low-level operator
-
-```js
-const fork = (callback, ...args) => {
-  go(callback, ...args);
-};
-```
-
 ### kill
 
 Exit All
@@ -315,8 +275,8 @@ Exit All
 
 ```js
 go(function* () {
-  yield call(function* () {
-    yield call(function* () {
+  yield go(function* () {
+    yield go(function* () {
       yield kill();
     });
   });
@@ -426,14 +386,13 @@ takeEvery(ch, function* () {});
 #### low-level operator
 
 ```js
-const takeEvery = (channel, callback) => {
+const takeEvery = (channel, callback) =>
   go(function* () {
     while (true) {
       const value = yield take(channel);
       go(callback, value);
     }
   });
-};
 ```
 
 ### takeLatest
@@ -447,7 +406,7 @@ takeLatest(ch, function* () {});
 #### low-level operator
 
 ```js
-const takeLatest = (channel, callback) => {
+const takeLatest = (channel, callback) =>
   go(function* () {
     let lastTask;
 
@@ -457,7 +416,6 @@ const takeLatest = (channel, callback) => {
       lastTask = go(callback, value);
     }
   });
-};
 ```
 
 ### takeLeading
@@ -471,7 +429,7 @@ takeLeading(ch, function* () {});
 #### low-level operator
 
 ```js
-const takeLeading = (channel, callback) => {
+const takeLeading = (channel, callback) =>
   go(function* () {
     let executable = true;
 
@@ -486,7 +444,6 @@ const takeLeading = (channel, callback) => {
       }
     }
   });
-};
 ```
 
 ### throttle
@@ -510,7 +467,7 @@ const defaultConfig: Required<ThrottleConfig> = {
   trailing: false,
 };
 
-const throttle = (channel, callback, ms, config) => {
+const throttle = (channel, callback, ms, config) =>
   go(function* () {
     const options = Object.assign({}, defaultConfig, {
       ...config,
@@ -541,5 +498,4 @@ const throttle = (channel, callback, ms, config) => {
       }, ms);
     }
   });
-};
 ```

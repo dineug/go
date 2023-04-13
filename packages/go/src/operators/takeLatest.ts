@@ -1,5 +1,5 @@
 import { Channel } from '@/channel';
-import { type PromiseWithCancel, go } from '@/go';
+import { go, type PromiseWithCancel } from '@/go';
 import { cancel } from '@/operators/cancel';
 import { take } from '@/operators/take';
 
@@ -9,7 +9,7 @@ export const takeLatest = <
 >(
   channel: Channel<T>,
   callback: F
-) => {
+) =>
   go(function* () {
     let lastTask: PromiseWithCancel | undefined;
 
@@ -20,4 +20,3 @@ export const takeLatest = <
       lastTask = go(callback, value);
     }
   });
-};

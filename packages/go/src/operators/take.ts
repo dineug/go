@@ -1,5 +1,5 @@
 import { Channel } from '@/channel';
-import { type PromiseWithCancel, go } from '@/go';
+import { go, type PromiseWithCancel } from '@/go';
 
 export const take = <T = any>(channel: Channel<T>) =>
   go(function* () {

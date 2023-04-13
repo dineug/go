@@ -1,16 +1,4 @@
-import {
-  all,
-  call,
-  channel,
-  CO,
-  delay,
-  flush,
-  fork,
-  go,
-  put,
-  race,
-  take,
-} from '@/index';
+import { all, channel, CO, delay, flush, go, put, race, take } from '@/index';
 
 const inputChannel = channel<number>();
 const outputChannel = channel<number>();
@@ -19,18 +7,18 @@ const foo: CO = function* () {
   console.log('start');
   const value = yield take(inputChannel);
   console.log('take:value', value);
-  const value2 = yield call((v: any) => v, value);
+  const value2 = yield go((v: any) => v, value);
   console.log('call:value', value2);
   yield put(outputChannel, 1234);
 
-  yield fork(function* () {
+  go(function* () {
     const value = yield take(inputChannel);
     console.log('fork:take:value', value);
   });
 
   const values = yield all([
-    call(() => 1),
-    fork(() => 2),
+    go(() => 1),
+    go(() => 2),
     Promise.resolve(3),
     Promise.resolve(4),
     5,

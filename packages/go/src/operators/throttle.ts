@@ -20,7 +20,7 @@ export const throttle = <
   callback: F,
   ms: number,
   config?: ThrottleConfig
-) => {
+) =>
   go(function* () {
     const options = Object.assign({}, defaultConfig, {
       ...config,
@@ -53,4 +53,3 @@ export const throttle = <
       }, ms);
     }
   });
-};

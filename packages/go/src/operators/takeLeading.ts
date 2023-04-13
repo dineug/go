@@ -8,7 +8,7 @@ export const takeLeading = <
 >(
   channel: Channel<T>,
   callback: F
-) => {
+) =>
   go(function* () {
     let executable = true;
 
@@ -24,4 +24,3 @@ export const takeLeading = <
       }
     }
   });
-};

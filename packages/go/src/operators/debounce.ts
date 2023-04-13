@@ -9,7 +9,7 @@ export const debounce = <
   channel: Channel<T>,
   callback: F,
   ms: number
-) => {
+) =>
   go(function* () {
     let timerId = -1;
 
@@ -20,4 +20,3 @@ export const debounce = <
       timerId = window.setTimeout(go, ms, callback, value);
     }
   });
-};

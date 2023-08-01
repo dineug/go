@@ -199,13 +199,7 @@ go(function* () {
 ```js
 const cancel = promise => {
   isPromiseWithCancel(promise) && promise.cancel();
-
-  return go(
-    () =>
-      new Promise<void>((resolve, reject) =>
-        promise ? resolve() : reject(CANCEL)
-      )
-  );
+  return go(() =>new Promise<void>((resolve, reject) =>reject(CANCEL)));
 };
 ```
 

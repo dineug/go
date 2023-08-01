@@ -8,11 +8,5 @@ export const isCancel = (value: any): value is typeof CANCEL =>
 
 export const cancel = <T>(promise?: CompositionPromise<T>) => {
   isPromiseWithCancel(promise) && promise.cancel();
-
-  return go(
-    () =>
-      new Promise<void>((resolve, reject) =>
-        promise ? resolve() : reject(CANCEL)
-      )
-  );
+  return go(() => new Promise<void>((resolve, reject) => reject(CANCEL)));
 };

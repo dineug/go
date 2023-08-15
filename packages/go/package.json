@@ -2,13 +2,14 @@
   "name": "@dineug/go",
   "version": "0.1.6",
   "description": "Promise Extension Library",
-  "main": "./dist/go.umd.js",
-  "module": "./dist/go.mjs",
+  "type": "module",
+  "main": "./dist/go.umd.cjs",
+  "module": "./dist/go.js",
   "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/go.mjs",
-      "require": "./dist/go.umd.js"
+      "import": "./dist/go.js",
+      "require": "./dist/go.umd.cjs"
     }
   },
   "files": [

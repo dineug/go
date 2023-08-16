@@ -5,10 +5,13 @@
   "type": "module",
   "main": "./dist/go.umd.cjs",
   "module": "./dist/go.js",
-  "typings": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/go.js",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/go.js"
+      },
       "require": "./dist/go.umd.cjs"
     }
   },

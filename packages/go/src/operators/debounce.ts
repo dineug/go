@@ -16,7 +16,7 @@ export const debounce = <
     while (true) {
       const value: any = yield take(channel);
 
-      window.clearTimeout(timerId);
-      timerId = window.setTimeout(go, ms, callback, value);
+      clearTimeout(timerId);
+      timerId = setTimeout(go, ms, callback, value);
     }
   });

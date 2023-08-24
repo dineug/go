@@ -41,7 +41,7 @@ export const throttle = <
         go(callback, value);
       }
 
-      timerId = window.setTimeout(() => {
+      timerId = setTimeout(() => {
         if (
           options.trailing &&
           (!options.leading || leadingValue !== trailingValue)

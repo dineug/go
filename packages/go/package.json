@@ -38,7 +38,7 @@
   "author": "SeungHwan-Lee <dineug2@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev",
     "build": "vite build"
   },
   "devDependencies": {

@@ -1,5 +1,3 @@
-import type { PromiseWithCancel } from '@/go';
-
 type typeofKey =
   | 'bigint'
   | 'boolean'
@@ -45,15 +43,6 @@ export const isPromise = (value: any): value is Promise<any> =>
   isFunction(value.then) &&
   isFunction(value.catch) &&
   isFunction(value.finally);
-
-export const isPromiseWithCancel = (
-  value: any
-): value is PromiseWithCancel<any> =>
-  isObject(value) &&
-  isFunction(value.then) &&
-  isFunction(value.catch) &&
-  isFunction(value.finally) &&
-  isFunction(value.cancel);
 
 export const isIterator = (
   value: any

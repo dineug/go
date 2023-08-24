@@ -90,14 +90,10 @@ go(foo);
 #### interface
 
 ```ts
-type PromiseWithCancel<T = any> = Promise<T> & {
-  cancel(): PromiseWithCancel<T>;
-};
-
 function go<F extends AnyCallback>(
   callback: F,
   ...args: Parameters<F>
-): PromiseWithCancel<GoReturnType<F>>;
+): Promise<GoReturnType<F>>;
 ```
 
 #### callback
@@ -198,7 +194,10 @@ go(function* () {
 
 ```js
 const cancel = promise => {
-  isPromiseWithCancel(promise) && promise.cancel();
+  if (isObject(promise)) {
+    const cancel = Reflect.get(promise, ATTACH_CANCEL);
+    cancel?.();
+  }
   return go(() => new Promise<void>((resolve, reject) => reject(CANCEL)));
 };
 ```
@@ -221,8 +220,8 @@ const debounce = (channel, callback, ms) =>
     while (true) {
       const value = yield take(channel);
 
-      window.clearTimeout(timerId);
-      timerId = window.setTimeout(go, ms, callback, value);
+      clearTimeout(timerId);
+      timerId = setTimeout(go, ms, callback, value);
     }
   });
 ```
@@ -240,8 +239,7 @@ go(function* () {
 #### low-level operator
 
 ```js
-const delay = ms =>
-  go(() => new Promise(resolve => window.setTimeout(resolve, ms)));
+const delay = ms => go(() => new Promise(resolve => setTimeout(resolve, ms)));
 ```
 
 ### flush
@@ -359,10 +357,9 @@ const take = channel =>
       drop = channel.take(resolve, reject);
     });
 
-    promise.cancel = () => {
+    attachCancel(promise, () => {
       drop();
-      return promise;
-    };
+    });
 
     const value = yield promise;
     return value;
@@ -481,7 +478,7 @@ const throttle = (channel, callback, ms, config) =>
         go(callback, value);
       }
 
-      timerId = window.setTimeout(() => {
+      timerId = setTimeout(() => {
         if (
           options.trailing &&
           (!options.leading || leadingValue !== trailingValue)

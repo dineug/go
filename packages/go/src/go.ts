@@ -7,6 +7,7 @@ import {
 } from '@/is-type';
 import {
   type AnyCallback,
+  attachCancel,
   CANCEL,
   cancel,
   isCancel,
@@ -17,14 +18,7 @@ export type CompositionGenerator<T> =
   | Generator<T | CompositionGenerator<T>>
   | AsyncGenerator<T | CompositionGenerator<T>>;
 
-export type PromiseWithCancel<T = any> = Promise<T> & {
-  cancel(): PromiseWithCancel<T>;
-};
-
-export type CompositionPromise<T = any> =
-  | Promise<T>
-  | PromiseLike<T>
-  | PromiseWithCancel<T>;
+export type CompositionPromise<T = any> = Promise<T> | PromiseLike<T>;
 
 export type CoroutineCreator = (
   ...args: any[]
@@ -48,7 +42,7 @@ type GoReturnType<
 export function go<F extends AnyCallback>(
   callback: F,
   ...args: Parameters<F>
-): PromiseWithCancel<GoReturnType<F>> {
+): Promise<GoReturnType<F>> {
   let canceled = false;
   let cancelAndReject: AnyCallback | null = null;
 
@@ -99,13 +93,12 @@ export function go<F extends AnyCallback>(
       }
       reject(error);
     }
-  }) as PromiseWithCancel;
+  }) as Promise<GoReturnType<F>>;
 
-  promise.cancel = () => {
+  attachCancel(promise, () => {
     canceled = true;
     cancelAndReject?.();
-    return promise;
-  };
+  });
 
   return promise;
 }

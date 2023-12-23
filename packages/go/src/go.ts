@@ -95,6 +95,9 @@ export function go<F extends AnyCallback>(
     }
   }) as Promise<GoReturnType<F>>;
 
+  // fix: Uncaught (in promise)
+  promise.catch(() => {});
+
   attachCancel(promise, () => {
     canceled = true;
     cancelAndReject?.();

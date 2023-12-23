@@ -1,6 +1,6 @@
 {
   "name": "@dineug/go",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Promise Extension Library",
   "type": "module",
   "main": "./dist/go.min.js",

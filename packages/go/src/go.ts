@@ -30,14 +30,14 @@ export type CO = CoroutineCreator;
 
 type GoReturnType<
   F extends AnyCallback,
-  R extends ReturnType<F> = ReturnType<F>
+  R extends ReturnType<F> = ReturnType<F>,
 > = R extends Promise<any>
   ? Awaited<R>
   : R extends Iterator<any, infer IR> | Generator<any, infer IR>
-  ? IR
-  : R extends AsyncIterator<any, infer AIR> | AsyncGenerator<any, infer AIR>
-  ? Awaited<AIR>
-  : R;
+    ? IR
+    : R extends AsyncIterator<any, infer AIR> | AsyncGenerator<any, infer AIR>
+      ? Awaited<AIR>
+      : R;
 
 export function go<F extends AnyCallback>(
   callback: F,
@@ -107,10 +107,10 @@ function toNext(value: any) {
   return isPromiseLike(value)
     ? value
     : isIterator(value)
-    ? go(() => value)
-    : isFunction(value)
-    ? go(value)
-    : isArray(value)
-    ? value.map(value => go(() => value))
-    : Promise.resolve();
+      ? go(() => value)
+      : isFunction(value)
+        ? go(value)
+        : isArray(value)
+          ? value.map(value => go(() => value))
+          : Promise.resolve();
 }

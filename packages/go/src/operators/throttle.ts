@@ -14,7 +14,7 @@ const defaultConfig: Required<ThrottleConfig> = {
 
 export const throttle = <
   T = any,
-  F extends (value: T) => any = (value: T) => any
+  F extends (value: T) => any = (value: T) => any,
 >(
   channel: Channel<T>,
   callback: F,

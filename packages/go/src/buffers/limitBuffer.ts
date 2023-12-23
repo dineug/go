@@ -58,8 +58,8 @@ export class LimitBuffer<T = any> implements ChannelBuffer<T> {
       this.#config.trailing
         ? this.#queue.pop()
         : this.#config.leading
-        ? this.#queue.shift()
-        : this.#queue.pop();
+          ? this.#queue.shift()
+          : this.#queue.pop();
     }
   }
 }

@@ -4,7 +4,7 @@ import { take } from '@/operators/take';
 
 export const debounce = <
   T = any,
-  F extends (value: T) => any = (value: T) => any
+  F extends (value: T) => any = (value: T) => any,
 >(
   channel: Channel<T>,
   callback: F,

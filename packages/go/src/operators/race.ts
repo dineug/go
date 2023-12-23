@@ -16,7 +16,7 @@ export const race = <T extends RaceRecord>(record: T) =>
       isPromise(entry)
         ? entry.then(toResolve(key)).catch(reject)
         : isPromiseLike(entry)
-        ? entry.then(toResolve(key))
-        : toResolve(key)(entry);
+          ? entry.then(toResolve(key))
+          : toResolve(key)(entry);
     }
   });

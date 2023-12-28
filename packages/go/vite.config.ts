@@ -23,9 +23,8 @@ export default defineConfig(({ command }) => {
     build: {
       lib: {
         entry: './src/index.ts',
-        name: pkg.name,
-        fileName: format => (format === 'es' ? 'go.js' : 'go.min.js'),
-        formats: ['es', 'umd'],
+        fileName: 'go',
+        formats: ['es'],
       },
       rollupOptions: {
         output: {

@@ -194,7 +194,7 @@ const cancel = promise => {
     const cancel = Reflect.get(promise, ATTACH_CANCEL);
     cancel?.();
   }
-  return go(() => new Promise<void>((resolve, reject) => reject(CANCEL)));
+  return go(() => new Promise((resolve, reject) => reject(CANCEL)));
 };
 ```
 
@@ -326,8 +326,8 @@ const race = record =>
       isPromise(entry)
         ? entry.then(toResolve(key)).catch(reject)
         : isPromiseLike(entry)
-        ? entry.then(toResolve(key))
-        : toResolve(key)(entry);
+          ? entry.then(toResolve(key))
+          : toResolve(key)(entry);
     }
   });
 ```
@@ -443,10 +443,10 @@ throttle(ch, function* () {}, 1000);
 
 #### low-level operator
 
-```js
+```ts
 type ThrottleConfig = Partial<{
-  leading: boolean,
-  trailing: boolean,
+  leading: boolean;
+  trailing: boolean;
 }>;
 
 const defaultConfig: Required<ThrottleConfig> = {

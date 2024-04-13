@@ -31,13 +31,14 @@ export type CO = CoroutineCreator;
 type GoReturnType<
   F extends AnyCallback,
   R extends ReturnType<F> = ReturnType<F>,
-> = R extends Promise<any>
-  ? Awaited<R>
-  : R extends Iterator<any, infer IR> | Generator<any, infer IR>
-    ? IR
-    : R extends AsyncIterator<any, infer AIR> | AsyncGenerator<any, infer AIR>
-      ? Awaited<AIR>
-      : R;
+> =
+  R extends Promise<any>
+    ? Awaited<R>
+    : R extends Iterator<any, infer IR> | Generator<any, infer IR>
+      ? IR
+      : R extends AsyncIterator<any, infer AIR> | AsyncGenerator<any, infer AIR>
+        ? Awaited<AIR>
+        : R;
 
 export function go<F extends AnyCallback>(
   callback: F,
